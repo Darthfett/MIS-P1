@@ -11,8 +11,10 @@ This project will use the [Wand](http://dahlia.kr/wand/) library for python, whi
 		* MacPorts: `$ sudo port install imagemagick`
 4. Install easy_install.
 	- Windows: download and install the [setuptools binary](http://pypi.python.org/packages/2.7/s/setuptools/setuptools-0.6c11.win32-py2.7.exe#md5=57e1e64f6b7c7f1d2eddfc9746bbaf20).
-	- Mac: see [this guide](http://pypi.python.org/pypi/setuptools#files).
-5. Add the default location for installing python scripts (Windows: C:\Python27\Scripts\) to your $PATH environmental variable.
+	- Mac: see [this guide](http://pypi.python.org/pypi/setuptools#cygwin-mac-os-x-linux-other).
+5. Add easy_install to your $PATH environmental variable.
+	- Windows: C:\Python27\Scripts\
+ 	- Mac: this is the default location for python scripts.
 6. Open up a terminal/dos prompt and do `$ easy_install Wand` to install Wand.
 
 The Wand library should now be installed, and you should be able to run the program main.py with `$ python main.py`.
