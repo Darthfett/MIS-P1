@@ -4,7 +4,7 @@ This project will use the [Wand](http://dahlia.kr/wand/) library for python, whi
 
 1. Download and install the x86 (32-bit) version of [python 2.7](http://www.python.org/download/).
 2. Add the python installation directory (e.g. C:\Python27) and the Scripts subdirectory (e.g. C:\Python27\Scripts) to your $PATH environmental variable.
-3. Install ImageMagick.
+3. Install ImageMagick.  Make sure that during installation, you check the `Install development headers and libraries for C and C++` box.
 	- Windows: download and install [the binary](http://www.imagemagick.org/download/binaries/ImageMagick-6.7.9-5-Q16-windows-dll.exe).
 	- Mac: Either use Homebrew or MacPorts to install ImageMagick.
 		* Homebrew: `$ brew install imagemagick`
