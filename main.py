@@ -11,6 +11,20 @@ import sys
 # project libraries
 pass
 
+def RGB_to_XYZ(rgb):
+    """Get a tuple of the X, Y, Z component of the color."""
+    r, g, b = rgb.red, rgb.green, rgb.blue
+    
+    #       [ 0.3935 0.3653 0.1916 ]
+    # T =   [ 0.2124 0.7011 0.0866 ]
+    #       [ 0.0187 0.1119 0.9582 ]
+    # [X; Y; Z] = T * [R; G; B]
+    
+    x = 0.3935 * r + 0.3653 * g + 0.1916 * b
+    y = 0.2124 * r + 0.7011 * g + 0.0866 * b
+    z = 0.0187 * r + 0.1119 * g + 0.9582 * b
+    return (x, y, z)
+
 def partition_image(image, rows=6, cols=6):
     """
     Takes an image and partitions it into a 6x6 grid.
