@@ -19,8 +19,8 @@ def partition_image(image, rows=6, cols=6):
     """
     
     # Width and height of each individual image (as a float)
-    width = image.width / rows
-    height = image.height / cols    
+    width = image.width / cols
+    height = image.height / rows
     images = []    
     
     # Partition image into 36 equal images
@@ -43,11 +43,16 @@ def main(args):
         print('main.py takes exactly one argument as input: the path to an image file.')
     
     # Open image and partition in 36 pieces, and put into a 'pieces' folder
-    image = Image(filename=args[0])
-    images = partition_image(image)
-    os.mkdir('pieces')
-    for i, img in enumerate(images):
-        img.format = 'png'
-        img.save(filename='pieces/' + str(i) + '.png')
+    with Image(filename=args[0]) as image:
+        images = partition_image(image)
+        try:
+            os.mkdir('pieces')
+        except WindowsError:
+            pass
+        for i, img in enumerate(images):
+            img.format = 'png'
+            img.save(filename='pieces/' + str(i) + '.png')
+        print(get_average_color(image))
 
-main(sys.argv[1:]) # skip first argument ("main.py")
+if __name__ == '__main__':
+    main(sys.argv[1:]) # skip first argument ("main.py")
