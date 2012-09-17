@@ -47,4 +47,27 @@ def RGB_to_LAB(r, g, b, xn, yn, zn):
     b = 500 * (rel_y - rel_z)
     
     return (L, a, b)
+
+def RGB_to_HSL(r, g, b):
+    max_ = max(r, g, b)
+    min_ = min(r, g, b)
+    chroma = max_ - min_
     
+    if chroma == 0:
+        H = None
+    else
+        if max_ == r:
+            H = ((g - b) / c) % 6
+        elif max_ == g:
+            H = ((b - r) / c) + 2
+        else:
+            H = ((r - g) / c) + 4
+        # H =  60deg x H  -- What does this mean?
+        
+    L = (.5) * (max_ + min_)
+    if chroma == 0:
+        S = 0
+    else:
+        S = chroma / (1 - abs(2 * L - 1))
+    
+    return (H, S, L)
