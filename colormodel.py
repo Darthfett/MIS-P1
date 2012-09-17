@@ -30,3 +30,21 @@ def RGB_to_YCbCr(r, g, b):
     y =  0.299 * r +  0.587 * g +  0.144 * b
     cb = -0.168736 * r + -0.331264 * g + 0.5 * b + 0.5
     cr = 0.5 * r + -0.418688 * g + -0.081312 * b + 0.5
+    return (y, cb, cr)
+
+def RGB_to_LAB(r, g, b, xn, yn, zn):
+    """Get a tuple of the L, a, b components of the color (relative to the white point xn, yn, zn)."""
+    x = 0.3935 * r + 0.3653 * g + 0.1916 * b
+    y = 0.2124 * r + 0.7011 * g + 0.0866 * b
+    z = 0.0187 * r + 0.1119 * g + 0.9582 * b
+    
+    rel_x = (x / xn) ** (1 / 3)
+    rel_y = (y / yn) ** (1 / 3)
+    rel_z = (z / zn) ** (1 / 3)
+    
+    L = 116 * (rel_y) - 16
+    a = 500 * (rel_x - rel_y)
+    b = 500 * (rel_y - rel_z)
+    
+    return (L, a, b)
+    
