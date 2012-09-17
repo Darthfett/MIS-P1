@@ -62,7 +62,7 @@ def RGB_to_HSL(r, g, b):
             H = ((b - r) / c) + 2
         else:
             H = ((r - g) / c) + 4
-        # H =  60deg x H  -- What does this mean?
+        H *= 60
         
     L = (.5) * (max_ + min_)
     if chroma == 0:
