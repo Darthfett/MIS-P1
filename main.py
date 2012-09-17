@@ -35,15 +35,16 @@ def partition_image(image, rows=6, cols=6):
     return images
 
 def main(args):
-    if not args:
-        print('main.py takes an argument as input: the path to an image file.')
-        return
-
-    if len(args) != 1:
+    if len(args) > 1:
         print('main.py takes exactly one argument as input: the path to an image file.')
+        return
+    elif not args:
+        filepath = input('Enter the path to an image file: ')
+    else:
+        filepath = args.pop()
 
     # Open image and partition in 36 pieces, and put into a 'pieces' folder
-    with Image(filename=args[0]) as image:
+    with Image(filename=filepath) as image:
         images = partition_image(image)
         try:
             os.mkdir('pieces')
