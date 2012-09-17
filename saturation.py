@@ -22,27 +22,43 @@ def desat_top(images):
 	set top row of desat_images to 10 less saturation
 	"""
 
+	"""convert back to RGB
+	"""
+	
 	"""
 	use images to compare overall change in color balance
 	or whatever makes sense for 'energy'
 	and change bottom two rows of desat_images to meet that requirement
 	"""
 
-	return desat_images
-
-def convert_hsl(images):
+def sat_top(images):
+	
+	sat_images = images
 
 	"""
-	use colormodel.py's conversion function to change the top row
-	reduce saturation
-	then convert back to RGB for next phase
+	convert copy of images to HSL
 	"""
 
-	return images
+	"""
+	set top row of desat_images to 10+ saturation
+	"""
 
-def compare_energy(images, desat_images):
+	"""convert back to RGB
+	"""
+
+	"""
+	use images to compare overall change in color balance
+	or whatever makes sense for 'energy'
+	and change bottom two rows of desat_images to meet that requirement
+	"""
+
+	return sat_images
+
+def compare_energy(images, alter_images):
 
 	"""
 	compare 'energy' of images
-	and change the bottom two rows of desat_images to match
+	and change the bottom two rows of alter_images to match
 	"""
+
+	return alter_images
