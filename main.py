@@ -34,26 +34,81 @@ def partition_image(image, rows=6, cols=6):
 
     return images
 
+# Command delegator functions
+    
+def help(_):
+    print(CMD_HELP)
+
+def average(image, color_model):
+    """Take a string color model, and print out the average color for each cell in the 6x6 grid."""
+    pass
+
+def saturate(image, increase):
+    """Take a string "increase" or "decrease", and increase/decrease the saturation of the first row of the image by 10%, while preserving the energy."""
+    pass
+
+def nearest(image, cell, color_model):
+    """Take a string cell and a string color model, and locate the cell in the grid with the most similar average color."""
+    pass
+
+def reduce(image, cell, n):
+    """Take a string cell and a string n, and create 7 versions of the image, where the number of colors has been reduced to n."""
+    pass
+
+def highlight(image, cell):
+    """Take a string cell, and create 7 versions of the image, where pixels with the highest 80% of the third color component are highlighted."""
+    pass
+
+CMD_HELP = """
+Available commands:
+    help : Show this help message.
+    average <color_model> : Print out the average color for each cell in the 6x6 grid of the image in the specified color model.  Possible color models are:
+        - RGB
+        - XYZ
+        - Lab
+        - YUV
+        - YCbCr
+        - YIQ
+        - HSL
+    saturate <increase/decrease> : Increase or decrease the saturation of the first row of the image by 10% (while preserving the overall 'energy').
+    nearest <cell> <color_model> : Given a cell in the grid and a color model, locate the cell in the grid with the most similar average color.  cell is an integer in the range [0, 35].
+    reduce <cell> <N> : Given a cell in the grid and a number N, create 7 different versions of the image, where the number of colors has been reduced to N.
+    highlight <cell> : Given a cell in the grid, create 7 different versions of the image, where pixels with the highest 80% of the third color component are highlighted.
+"""
+
+CMD_DICT = {
+    'help': help,
+    'average': average,
+    'saturate': saturate,
+    'nearest': nearest,
+    'reduce': reduce,
+    'highlight': highlight,
+}
+
 def main(args):
     if len(args) > 1:
         print('main.py takes exactly one argument as input: the path to an image file.')
         return
     elif not args:
-        filepath = input('Enter the path to an image file: ')
+        filepath = raw_input('Enter the path to an image file: ')
     else:
         filepath = args.pop()
 
-    # Open image and partition in 36 pieces, and put into a 'pieces' folder
-    with Image(filename=filepath) as image:
-        images = partition_image(image)
-        try:
-            os.mkdir('pieces')
-        except WindowsError:
-            pass
-        for i, img in enumerate(images):
-            img.format = 'png'
-            img.save(filename='pieces/' + str(i) + '.png')
-        print(get_average_color(image))
+    with Image(filename=filepath) as image:        
+        # Main command loop interface
+        while True:
+            command = raw_input('Enter a command (or "help"): ').strip().split(' ')
+            
+            cmd = command[0]
+            args = command[1:]
+            
+            if cmd not in CMD_DICT:
+                if cmd.startswith('q'):
+                    break
+                print('Invalid command.')
+                continue
+            
+            CMD_DICT[cmd](image, *args)
 
 if __name__ == '__main__':
     main(sys.argv[1:]) # skip first argument ("main.py")
