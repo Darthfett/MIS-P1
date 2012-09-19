@@ -58,11 +58,11 @@ def RGB_to_HSL(r, g, b):
         H = None
     else:
         if max_ == r:
-            H = ((g - b) / c) % 6
+            H = ((g - b) / chroma) % 6
         elif max_ == g:
-            H = ((b - r) / c) + 2
+            H = ((b - r) / chroma) + 2
         else:
-            H = ((r - g) / c) + 4
+            H = ((r - g) / chroma) + 4
         H *= 60
 
     L = (.5) * (max_ + min_)
@@ -74,7 +74,7 @@ def RGB_to_HSL(r, g, b):
     return (H, S, L)
 
 converter_for_colormodel = {
-    'RGB': lambda r, g, b: (r, g, b)
+    'RGB': lambda r, g, b: (r, g, b),
     'XYZ': RGB_to_XYZ,
     'CMY': RGB_to_CMY,
     'YUV': RGB_to_YUV,
