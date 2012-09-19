@@ -83,13 +83,10 @@ def compare_average_color(image_list, index, colorModel):
 
             return closeImage
     elif colorModel ==  'Lab':
-        xn=50 #put in values for white
-        yn=50
-        zn=50
-        target_L,target_a,target_b = cm.RGB_to_LAB(target_red,target_green,target_blue,xn,yn,zn)
+        target_L,target_a,target_b = cm.RGB_to_LAB(target_red,target_green,target_blue) # Use default white X, Y, Z.
         for i in image_list:
 
-            L,a,b = cm.RGB_to_LAB(*average_RGB(i),xn=xn, xy=xy, xz=xz)
+            L,a,b = cm.RGB_to_LAB(*average_RGB(i)) # Use default white X, Y, Z.
 
             L_dif = L-target_L
             a_dif = a-target_a
