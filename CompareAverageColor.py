@@ -3,6 +3,12 @@ Created on Sep 17, 2012
 
 @author: wes
 '''
+from wand.image import Image
+from wand.image import Iterator
+from wand.color import Color
+
+import os
+import sys
 import math
 
 
@@ -10,15 +16,14 @@ def CompareAverageColor (image_list, index, colorModel):
     """
     Takes a list of images, the index of one image
     in that list, and the color model being used. 
-    Outputs the image with the closest average color
+    Returns the image with the closest average color
     to the image at the index given
     """
     
-    # Needs to implement functions for getting average r,g, and b 
     target_image = image_list[index]
     target_red = getAvgRed(target_image)
     target_green = getAvgGreen(target_image)
-    target_blue = getAvgBlue(target_image)
+    target_blue = getAvgBlue(target_image) #this gives us the average RGB values to compare to
     image_list= image_list[:index]+image_list[index+1:] #remove the target image from the list
     closest_d = 10000
     
@@ -31,7 +36,7 @@ def CompareAverageColor (image_list, index, colorModel):
             #Get RGB values for i
             red = getAvgRed(i)
             green = getAvgGreen(i)
-            blue = getAvgBlue(i) #these functions need to be implemented
+            blue = getAvgBlue(i)
             r_dif = red-target_red
             g_dif = green-target_green
             b_dif = blue-target_blue
@@ -127,9 +132,9 @@ def CompareAverageColor (image_list, index, colorModel):
     
     elif colorModel == 'YIQ':
         target_y,target_i,target_q = RGB_to_YIQ(target_red,target_green,target_blue)
-        for i in image_list:
-            #Get RGB values for i
-            y,i,q = RGB_to_YIQ(getAvgRed(i),getAvgGreen(i),getAvgBlue(i))
+        for j in image_list: #for this branch had to make j the iterating variable so doesn't interfere with i of YIQ below
+            #Get RGB values for j
+            y,i,q = RGB_to_YIQ(getAvgRed(j),getAvgGreen(j),getAvgBlue(j))
             
             y_dif = y-target_y
             i_dif = i-target_i
@@ -137,7 +142,7 @@ def CompareAverageColor (image_list, index, colorModel):
             d=math.sqrt(math.pow(y_dif,2)+math.pow(i_dif,2)+math.pow(q_dif,2))
             if d<closest_d:
                 closest_d=d
-                closeImage = i
+                closeImage = j
         #Compare averages for target images and return
         return closeImage
     
@@ -146,7 +151,8 @@ def CompareAverageColor (image_list, index, colorModel):
         for i in image_list:
             #Get RGB values for i
             h,s,l = RGB_to_HSL(getAvgRed(i),getAvgGreen(i),getAvgBlue(i))
-            
+            if h == None: 
+                h = 0 #Because need to be able to subtract
             h_dif = h-target_h
             s_dif = s-target_s
             l_dif = l-target_l
@@ -157,9 +163,57 @@ def CompareAverageColor (image_list, index, colorModel):
         #Compare averages for target images and return
         return closeImage
     else :
-        pass #add error catching
+        print "ERROR: Invalid color model chosen. Choices are: 'RGB','XYZ','Lab','YUV','YCbCr','YIQ', and 'HSL'"
+        
     
+    
+def getAvgRed(img):
+#given an image, take the red value for each pixel and return their average
+    redList = []
+    i=Image(filename = img)
+    for row in i:
+        for col in row:
+            color = str(col)
+            co= color.strip('srgb()').split(',') #strip the rgb vals
+            redList.append(co[0])#add the red value of this pixel to the list
+    n=0
+    for x in redList:
+        n = n+int(float(x))
+    return n/len(redList)
 
+def getAvgGreen(img):
+#given an image, take the green value for each pixel and return their average
+    greenList = []
+    i=Image(filename = img)
+    for row in i:
+        for col in row:
+            color = str(col)
+            co = color.strip('srab()').split(',')
+            greenList.append(co[1])
+    n=0
+    for x in greenList:
+        n = n+int(float(x))
+    return n/len(greenList)
+    
+#Functions to get the average R,G,or B out of an image:   
+def getAvgBlue(img):
+#given an image, take the red value for each pixel and return their average
+    blueList = []
+    i=Image(filename = img)
+    for row in i:
+        for col in row:
+            color = str(col)
+            co = color.strip('srab()').split(',')
+            blueList.append(co[2])
+    n=0
+    for x in blueList:
+        n = n+int(float(x))
+    return n/len(blueList)
+
+
+
+##Following is Casey's code. Might not need to be included in mine.
+#The conversions from RGB to other color models.
 def RGB_to_XYZ(r, g, b):
     """Get a tuple of the X, Y, Z component of the color."""
 
@@ -235,13 +289,11 @@ def RGB_to_HSL(r, g, b):
     
     return (H, S, L)
     
-def getAvgRed(img):
-    return 7 #implement this
 
-def getAvgGreen(img):
-    return 5 #implement this
-def getAvgBlue(img):
-    return 5 #implement this
-print RGB_to_HSL(5,5,5)
-print CompareAverageColor ([1,2,3], 1, 'HSL') #test
+#Test code: input imgList (3 images), index 1, and rgb.  It should see which of red.jpg and
+#blue_gradient.jpg are closest to white.jpg given RGB color scheme (it took about 30 sec to
+#run on my pc, so be patient):
+imgList = ['white.jpg', 'blue_gradient.jpg']
+print CompareAverageColor(imgList,1,'YIQ')
+
         
