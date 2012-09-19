@@ -15,7 +15,7 @@ def partition_image(image, rows=6, cols=6):
     """
     Takes an image and partitions it into a 6x6 grid.
 
-    Returns an array of 36 images, listed in row major order.
+    Returns a list of 36 images, listed in row major order.
     """
 
     # Width and height of each individual image (as a float)
@@ -39,23 +39,23 @@ def partition_image(image, rows=6, cols=6):
 def help(_):
     print(CMD_HELP)
 
-def average(image, color_model):
+def delegator_average(image, color_model):
     """Take a string color model, and print out the average color for each cell in the 6x6 grid."""
     pass
 
-def saturate(image, increase):
+def delegator_saturate(image, increase):
     """Take a string "increase" or "decrease", and increase/decrease the saturation of the first row of the image by 10%, while preserving the energy."""
     pass
 
-def nearest(image, cell, color_model):
+def delegator_nearest(image, cell, color_model):
     """Take a string cell and a string color model, and locate the cell in the grid with the most similar average color."""
     pass
 
-def reduce(image, cell, n):
+def delegator_reduce(image, cell, n):
     """Take a string cell and a string n, and create 7 versions of the image, where the number of colors has been reduced to n."""
     pass
 
-def highlight(image, cell):
+def delegator_highlight(image, cell):
     """Take a string cell, and create 7 versions of the image, where pixels with the highest 80% of the third color component are highlighted."""
     pass
 
@@ -78,11 +78,11 @@ Available commands:
 
 CMD_DICT = {
     'help': help,
-    'average': average,
-    'saturate': saturate,
-    'nearest': nearest,
-    'reduce': reduce,
-    'highlight': highlight,
+    'average': delegator_average,
+    'saturate': delegator_saturate,
+    'nearest': delegator_nearest,
+    'reduce': delegator_reduce,
+    'highlight': delegator_highlight,
 }
 
 def main(args):
