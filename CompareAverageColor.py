@@ -290,9 +290,10 @@ def RGB_to_HSL(r, g, b):
     return (H, S, L)
     
 
-#Test code: input imgList (3 images), index 1, and rgb.  It should see which of red.jpg and
-#blue_gradient.jpg are closest to white.jpg given RGB color scheme (it took about 30 sec to
-#run on my pc, so be patient):
+#Test code: input imgList (2 images), index of 1, and rgb as color model.
+#It should see which of red.jpg and blue_gradient.jpg are closest to 
+#white.jpg given RGB color scheme (it took about 10-15 sec to
+#run on my pc, so don't give up if it seems like it's stuck):
 imgList = ['white.jpg', 'blue_gradient.jpg']
 print CompareAverageColor(imgList,1,'YIQ')
 
