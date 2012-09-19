@@ -9,7 +9,8 @@ import os
 import sys
 
 # project libraries
-pass
+import average
+import colormodel as cm
 
 def partition_image(image, rows=6, cols=6):
     """
@@ -41,7 +42,9 @@ def help(_):
 
 def delegator_average(image, color_model):
     """Take a string color model, and print out the average color for each cell in the 6x6 grid."""
-    pass
+    images = partition_image(image)
+    assert color_model in cm.converter_for_colormodel
+    average.print_average(images, color_model)
 
 def delegator_saturate(image, increase):
     """Take a string "increase" or "decrease", and increase/decrease the saturation of the first row of the image by 10%, while preserving the energy."""
