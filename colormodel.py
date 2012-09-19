@@ -74,7 +74,7 @@ def RGB_to_HSL(r, g, b):
     return (H, S, L)
 
 converter_for_colormodel = {
-    'RGB': lambda x: x,
+    'RGB': lambda r, g, b: (r, g, b)
     'XYZ': RGB_to_XYZ,
     'CMY': RGB_to_CMY,
     'YUV': RGB_to_YUV,
