@@ -105,35 +105,45 @@ def main(args):
         filepath = raw_input('Enter the path to an image file: ')
     else:
         filepath = args.pop()
+        
+    # Verify that the image is good
+    while True:
+        try:
+            image = Image(filename=filepath)
+        except Exception:
+            print('Invalid image or path "{filepath}"'.format(filepath=filepath))
+            filepath = raw_input('Enter the path to an image file: ')
+        else:
+            # Image is good.
+            break
 
-    with Image(filename=filepath) as image:
-        # splice image into a 6x6 grid of images (row-major order).
-        images = partition_image(image)
+    # splice image into a 6x6 grid of images (row-major order).
+    images = partition_image(image)
 
-        # Main command loop interface
-        while True:
-            # Accept a command with args from the user (and split into a list)
-            command = raw_input('Enter a command (or "help"): ').strip().split(' ')
+    # Main command loop interface
+    while True:
+        # Accept a command with args from the user (and split into a list)
+        command = raw_input('Enter a command (or "help"): ').strip().split(' ')
 
-            cmd = command[0].lower() # command is case-insensitive
-            args = command[1:]
+        cmd = command[0].lower() # command is case-insensitive
+        args = command[1:]
 
-            # validate cmd to be a valid command
-            if cmd not in CMD_DICT:
-                # command is not an exact match, try a partial match
-                if any(command.startswith(cmd) for command in CMD_DICT):
-                    cmd = next(command for command in CMD_DICT if command.startswith(cmd))
+        # validate cmd to be a valid command
+        if cmd not in CMD_DICT:
+            # command is not an exact match, try a partial match
+            if any(command.startswith(cmd) for command in CMD_DICT):
+                cmd = next(command for command in CMD_DICT if command.startswith(cmd))
 
-            if cmd not in CMD_DICT:
-                # command is a quit, exit, or invalid command.
-                if cmd.startswith(('q', 'e')):
-                    break
-                print('Invalid command "{cmd}".  Valid commands: {cmds}'.format(cmd=cmd, cmds=', '.join(sorted(CMD_DICT.keys()))))
-                continue
-            # At this point, cmd is a valid command.
+        if cmd not in CMD_DICT:
+            # command is a quit, exit, or invalid command.
+            if cmd.startswith(('q', 'e')):
+                break
+            print('Invalid command "{cmd}".  Valid commands: {cmds}'.format(cmd=cmd, cmds=', '.join(sorted(CMD_DICT.keys()))))
+            continue
+        # At this point, cmd is a valid command.
 
-            # Execute one of the delegator functions with the given arguments.
-            CMD_DICT[cmd](images, *args)
+        # Execute one of the delegator functions with the given arguments.
+        CMD_DICT[cmd](images, *args)
 
 if __name__ == '__main__':
     main(sys.argv[1:]) # skip first argument ("main.py")
