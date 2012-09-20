@@ -83,3 +83,14 @@ converter_for_colormodel = {
     'Lab': RGB_to_LAB,
     'HSL': RGB_to_HSL,
 }
+
+str_to_model = {
+    'rgb': 'RGB',
+    'xyz': 'XYZ',
+    'cmy': 'CMY',
+    'yuv': 'YUV',
+    'yiq': 'YIQ',
+    'ycbcr': 'YCbCr',
+    'lab': 'Lab',
+    'hsl': 'HSL',
+}
