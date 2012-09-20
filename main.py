@@ -52,7 +52,9 @@ def delegator_saturate(image, increase):
 
 def delegator_nearest(image, cell, color_model):
     """Take a string cell and a string color model, and locate the cell in the grid with the most similar average color."""
-    pass
+    images = partition_image(image)
+    near_Image = nearest.compare_average_color(images, cell, colorModel)
+    near_Image.show()
 
 def delegator_reduce(image, cell, n):
     """Take a string cell and a string n, and create 7 versions of the image, where the number of colors has been reduced to n."""

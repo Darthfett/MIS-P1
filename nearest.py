@@ -16,7 +16,7 @@ import sys
 import math
 
 import colormodel as cm
-
+    
 
 def compare_average_color(image_list, index, colorModel):
     """
@@ -193,6 +193,6 @@ def average_RGB(img):
 #It should see which of red.jpg and blue_gradient.jpg are closest to
 #white.jpg given RGB color scheme (it took about 10-15 sec to
 #run on my pc, so don't give up if it seems like it's stuck):
-imgList = [Image(filename=fn) for fn in {'white.jpg', 'blue_gradient.jpg'}]
-print(compare_average_color(imgList,1,'YIQ'))
+#imgList = [Image(filename=fn) for fn in {'white.jpg', 'blue_gradient.jpg'}]
+#Image.display(compare_average_color(imgList,1,'YIQ'))
 
