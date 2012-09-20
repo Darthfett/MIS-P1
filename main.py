@@ -3,6 +3,7 @@ from __future__ import print_function
 
 # 3rd party imports
 from wand.image import Image
+from wand.display import display
 
 # built-in libraries
 import os
@@ -56,9 +57,8 @@ def delegator_saturate(images, increase):
 
 def delegator_nearest(images, cell, color_model):
     """Take a string cell and a string color model, and locate the cell in the grid with the most similar average color."""
-    images = partition_image(image)
     near_Image = nearest.compare_average_color(images, cell, colorModel)
-    near_Image.show()
+    display (near_Image)
 
 def delegator_reduce(images, cell, n):
     """Take a string cell and a string n, and create 7 versions of the image, where the number of colors has been reduced to n."""
