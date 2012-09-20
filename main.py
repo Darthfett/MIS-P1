@@ -114,7 +114,7 @@ def main(args):
             if cmd not in CMD_DICT:
                 if cmd.startswith(('q', 'e')):
                     break
-                print('Invalid command {cmd}.'.format(cmd=cmd))
+                print('Invalid command "{cmd}".  Valid commands: {cmds}'.format(cmd=cmd, cmds=', '.join(sorted(CMD_DICT.keys()))))
                 continue
             
             CMD_DICT[cmd](image, *args)
