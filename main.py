@@ -43,7 +43,9 @@ def help(_):
 def delegator_average(image, color_model):
     """Take a string color model, and print out the average color for each cell in the 6x6 grid."""
     images = partition_image(image)
-    assert color_model in cm.converter_for_colormodel
+    color_model = cm.str_to_model.get(color_model.lower(), None)
+    if color_model is None:
+        raise ValueError('color_model', color_model, "Invalid color model {model}".format(model=color_model))
     average.print_average(images, color_model)
 
 def delegator_saturate(image, increase):
@@ -102,13 +104,17 @@ def main(args):
         while True:
             command = raw_input('Enter a command (or "help"): ').strip().split(' ')
             
-            cmd = command[0]
+            cmd = command[0].lower()
             args = command[1:]
             
             if cmd not in CMD_DICT:
-                if cmd.startswith('q'):
+                if any(command.startswith(cmd) for command in CMD_DICT):
+                    cmd = next(command for command in CMD_DICT if command.startswith(cmd))
+
+            if cmd not in CMD_DICT:
+                if cmd.startswith(('q', 'e')):
                     break
-                print('Invalid command.')
+                print('Invalid command {cmd}.'.format(cmd=cmd))
                 continue
             
             CMD_DICT[cmd](image, *args)
