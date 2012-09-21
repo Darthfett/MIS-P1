@@ -9,6 +9,7 @@ import os
 import sys
 
 # project libraries
+import highlight
 import average
 import nearest
 import colormodel as cm
@@ -24,17 +25,25 @@ def partition_image(image, rows=6, cols=6):
     # Width and height of each individual image (as a float)
     width, height = image.size
     
-    width /= cols
-    height /= rows
+    width //= cols
+    height //= rows
     
-    images = []        
+    images = []
+    
+    
     
     for row in range(rows):
         for col in range(cols):
             left = int(round(width * col))
             top = int(round(height * row))
-            right = int(round(width * (col + 1)))
-            bot = int(round(height * (row + 1)))
+            if col == cols-1:
+                right = image.size[0]
+            else:
+                right = int(round(width * (col + 1)))
+            if row == rows-1:
+                bot = image.size[1]
+            else:
+                bot = int(round(height * (row + 1)))
             img = image.crop((left, top, right, bot))
             img.load()
             images.append(img)
@@ -74,6 +83,7 @@ def delegator_reduce(images, cell, n):
 
 def delegator_highlight(images, cell):
     """Take a string cell, and create 7 versions of the image, where pixels with the highest 80% of the third color component are highlighted."""
+    highlight.highlight_cell(images, int(cell))
     pass
 
 CMD_HELP = """
