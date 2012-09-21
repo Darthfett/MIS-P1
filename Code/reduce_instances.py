@@ -90,10 +90,10 @@ def reduce_instances(img,n):
     im = Image.open(img)
     pixList = list(im.getdata())
     unique_list = list(set(pixList))
-    print "pixListLength:"
-    print len(pixList)
-    print "uniqueListLength:"
-    print len(unique_list)
+    #print "pixListLength:"#
+    #print len(pixList)#
+    #print "uniqueListLength:"#
+    #print len(unique_list)#
     instance_box = []
     instance_box.append(unique_list)
     box_list = median_cut(instance_box,n)
@@ -101,15 +101,21 @@ def reduce_instances(img,n):
         for box in box_list:
             if p in box:
                 pixList[pixList.index(p)] = box[0]
-    print "new pixListLength:"
-    print len(pixList)
-    print "new pixList vals:"
-    print pixList
-    print "box_list:"
-    print len(box_list)
+    #print "new pixListLength:"#
+    #print len(pixList)#
+    #print "new pixList vals:"#
+    #print pixList#
+    #print "box_list:"#
+    #print len(box_list)#
+    #Image.frombuffer('RGB', im.size, pixList)
+    im.putdata(pixList)
     return im
 
 ## Testing:
 new_im = reduce_instances ('blue_gradient.jpg',2)
-new_im
+#new_list = list(new_im.getdata())
+#print "new_list:"
+#print new_list
 new_im.save('testIm.jpg')
+
+    
