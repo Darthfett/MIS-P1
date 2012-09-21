@@ -38,5 +38,6 @@ def print_average(images, color_model):
     average_RGBs = [average_RGB(image) for image in images]
     print("Average {cm} color:".format(cm=color_model))
     for cell, avg in enumerate(average_RGBs):
-        print("\tCell {cell}: {color}".format(cell=cell+1, color=cm.converter_for_colormodel[color_model](*avg)))
+        print("\tCell {}: ".format(cell+1), end='')
+        print(', '.join("%.3f" % color for color in cm.converter_for_colormodel[color_model](*avg)))
             
