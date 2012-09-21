@@ -62,7 +62,7 @@ def median_cut(boxes,n):
     '''
     given a list of lists of unique color instances, cut the number of instances to n
     '''
-    if len(boxes)<n:
+    while len(boxes)<n:
         big_box = largest_box(boxes)
         range_list = [range_r(big_box),range_g(big_box),range_b(big_box)]
         max_range = max(range_list)
@@ -77,11 +77,10 @@ def median_cut(boxes,n):
         boxes.insert(i,box2)
         boxes.insert(i,box1)
         #print boxes#
-        return median_cut(boxes,n) #define split
-    else:
+         #define split
         #print "else"#
         #print boxes#
-        return boxes
+    return boxes
 def f7(seq):
     seen = set()
     seen_add = seen.add
