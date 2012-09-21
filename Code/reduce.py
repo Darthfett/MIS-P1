@@ -82,12 +82,16 @@ def median_cut(boxes,n):
         #print "else"#
         #print boxes#
         return boxes
-    
+def f7(seq):
+    seen = set()
+    seen_add = seen.add
+    return [ x for x in seq if x not in seen and not seen_add(x)]
+
 def reduce_instances(img,n):
     '''
     take an image and a number, reduce the color
     '''
-    im = Image.open(img)
+    im = img.copy()
     pixList = list(im.getdata())
     unique_list = list(set(pixList))
     #print "pixListLength:"#
@@ -112,10 +116,10 @@ def reduce_instances(img,n):
     return im
 
 ## Testing:
-#new_im = reduce_instances ('blue_gradient.jpg',2)
+#new_im = Image.open('blue_gradient.jpg')
+#newer_im = reduce_instances (new_im,2)
+#newer_im.save('testIm.jpg') 
 #new_list = list(new_im.getdata())
 #print "new_list:"
 #print new_list
 #new_im.save('testIm.jpg')
-
-    
