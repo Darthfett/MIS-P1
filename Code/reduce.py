@@ -112,10 +112,10 @@ def reduce_instances(img,n):
     return im
 
 ## Testing:
-new_im = reduce_instances ('blue_gradient.jpg',2)
+#new_im = reduce_instances ('blue_gradient.jpg',2)
 #new_list = list(new_im.getdata())
 #print "new_list:"
 #print new_list
-new_im.save('testIm.jpg')
+#new_im.save('testIm.jpg')
 
     

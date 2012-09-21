@@ -14,6 +14,7 @@ import average
 import nearest
 import colormodel as cm
 import saturate
+import reduce
 
 def partition_image(image, rows=6, cols=6):
     """
