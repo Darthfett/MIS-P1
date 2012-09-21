@@ -13,7 +13,7 @@ import highlight
 import average
 import nearest
 import colormodel as cm
-import saturation as satmod
+import saturate
 
 def partition_image(image, rows=6, cols=6):
     """
@@ -67,7 +67,9 @@ def delegator_average(images, color_model):
 
 def delegator_saturate(images, increase):
     """Take a string "increase" or "decrease", and increase/decrease the saturation of the first row of the image by 10%, while preserving the energy."""
-    satmod.sat_top(images, increase)
+    img = highlight.splice_image(saturate.saturate_top(images, increase))
+    
+    img.save('../Outputs/saturate.png')
 
     pass
 
