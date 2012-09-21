@@ -73,6 +73,37 @@ def RGB_to_HSL(r, g, b):
 
     return (H, S, L)
 
+def HSL_to_RGB(hue, sat, lum): #math found here is sourced from equations found on wikipedia
+    #solve for chroma
+    chroma = (1 - abs(2 * lum - 1) ) * sat
+    
+    #get hue degree ratio(?)
+    hue_prime = hue / 60
+
+    #intermediate value. Wasn't explained what this was, other than "it's needed"
+    x = chroma * (1 - abs( (hue_prime %2) - 1) )
+
+    #get intermediate R,G,B values. This block right here is why I had to look online for help. No clue why it's this way
+    if hue_prime >= 0 and hue_prime < 1:
+        r1,g1,b1 = (chroma, x, 0)
+    elif hue_prime >= 1 and hue_prime < 2:
+        r1,g1,b1 = (x, chroma, 0)
+    elif hue_prime >= 2 and hue_prime < 3:
+        r1,g1,b1 = (0, chroma, x)
+    elif hue_prime >= 3 and hue_prime < 4:
+        r1,g1,b1 = (0, x, chroma)
+    elif hue_prime >= 4 and hue_prime < 5:
+        r1,g1,b1 = (x, 0, chroma)
+    elif hue_prime >= 5 and hue_prime < 6:
+        r1,g1,b1 = (chroma, 0, x)
+    else:
+        r1,g1,b1 = (0,0,0) #H was undefined.
+
+    #get the "lightness"
+    li = lum - (.5*chroma)
+
+    return (r1 + li, g1 + li, b1 + li)
+
 converter_for_colormodel = {
     'RGB': lambda r, g, b: (r, g, b),
     'XYZ': RGB_to_XYZ,
