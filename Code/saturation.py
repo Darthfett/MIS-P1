@@ -6,8 +6,6 @@ edit rest of image to maintain 'energy'
 return the image
 """
 
-# Note: this is just a code sketch, I'll fill in code as I go along.
-
 def sat_top(images, command):
     cols = 6;
     pix_size = len(images[1])
@@ -22,37 +20,54 @@ def sat_top(images, command):
     # access first 6 elements in Images, this is the top row of the 6x6 grid in images
     # in each item, access every sub element (assuming they are pixels here)
     # convert each pixel's rgb values to HSL. Alter the saturation
-    # edit the H and L values to keep energy the same
+    # edit the L values to keep energy the same
     # convert back to RGB
-    # copy these values back to the pixel's rgb values.
+    # copy these changes back.
     # end loop
     """
     for col in range(cols):
         pixels = sat_images[col]
         for pix in range(pix_size):
             pixel = pixels[pix]
-            pix_hue, pix_sat, pix_lum = cm.RGB_to_HSL(*pixel)
-            pix_sat = pix_sat * sat_amt
-            #add in fix for energy here, once I figure that out
-            pixel = HSL_to_RGB(pix_hue, pix_sat, pix_lum)
-            pixels[pix] = pixel     #update pixel in the list
-        
-        sat_images[col] = pixels;   #update block to altered pixels list
+            #convert RGB -> HSL
+            pix_hue, pix_sat, pix_lum = cm.RGB_to_HSL(pixel.red, pixel.green, pixel.blue)
+            
+            #alter saturation
+            pix_sat_alt = pix_sat * sat_amt
+
+            #to compensate for altered saturation, change luminance
+            pix_lum_alt = alter_luminance(pix_hue, pix_sat, pix_lum, pix_sat_alt)
+
+            #convert (now altered) HSL -> RGB
+            pixel.red,pixel.green,pixel.blue = HSL_to_RGB(pix_hue, pix_sat_alt, pix_lum_alt)
+            
+            #update pixel in list of pixels
+            pixels[pix] = pixel
+
+        #update pixel list to altered pixels list
+        sat_images[col] = pixels;   
 
     return sat_images
 
-def compare_energy(images, alter_images):
+#returns a new luminance value that will keep energy value of a pixel with altered saturation
+def alter_luminance(h,s,l, s_new):
+    #solve for energy of original HSL values (euclidean distance)
+    e = sqrt(h*h + s*s + l*l)
 
-    # compare 'energy' of images
-    # and change the bottom two rows of alter_images to match
-    # prof says this is on MiNC, whatever the hell that is.
-    return alter_images
+    #solve for new luminance value, using the new saturation (solving for Y, basically)
+    l_new = sqrt(e*e - h*h - s_new*s_new)   
+
+    return (l_new)
 
 def HSL_to_RGB(hue, sat, lum): #math found here is sourced from equations found on wikipedia
+    #solve for chroma
     chroma = (1 - abs(2 * lum - 1) ) * sat
+    
+    #get hue degree ratio(?)
     hue_prime = hue / 60
 
-    x = chroma * (1 - abs( (hue_prime %2) - 1) ) #intermediate value.
+    #intermediate value. Wasn't explained what this was, other than "it's needed"
+    x = chroma * (1 - abs( (hue_prime %2) - 1) )
 
     #get intermediate R,G,B values. This block right here is why I had to look online for help. No clue why it's this way
     if hue_prime >= 0 and hue_prime < 1:
@@ -70,6 +85,7 @@ def HSL_to_RGB(hue, sat, lum): #math found here is sourced from equations found 
     else:
         r1,g1,b1 = (0,0,0) #H was undefined.
 
-    li = lum - (.5*chroma) #"lightness"
+    #get the "lightness"
+    li = lum - (.5*chroma)
 
     return (r1 + li, g1 + li, b1 + li)
