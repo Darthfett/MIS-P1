@@ -31,10 +31,10 @@ def sat_top(images, command):
         pixels = sat_images[col]
         for pix in range(pix_size):
             pixel = pixels[pix]
-            pix_hue, pix_sat, pix_lum = cm.RGB_to_HSL(pixel.red, pixel.green, pixel.blue)
+            pix_hue, pix_sat, pix_lum = cm.RGB_to_HSL(*pixel)
             pix_sat = pix_sat * sat_amt
             #add in fix for energy here, once I figure that out
-            pixel.red,pixel.green,pixel.blue = HSL_to_RGB(pix_hue, pix_sat, pix_lum)
+            pixel = HSL_to_RGB(pix_hue, pix_sat, pix_lum)
             pixels[pix] = pixel     #update pixel in the list
         
         sat_images[col] = pixels;   #update block to altered pixels list
@@ -67,7 +67,7 @@ def HSL_to_RGB(hue, sat, lum): #math found here is sourced from equations found 
         r1,g1,b1 = (x, 0, chroma)
     elif hue_prime >= 5 and hue_prime < 6:
         r1,g1,b1 = (chroma, 0, x)
-    else    
+    else:
         r1,g1,b1 = (0,0,0) #H was undefined.
 
     li = lum - (.5*chroma) #"lightness"

@@ -2,8 +2,7 @@ from __future__ import division
 from __future__ import print_function
 
 # 3rd party imports
-from wand.image import Image
-from wand.display import display
+import Image as PIL
 
 # built-in libraries
 import os
@@ -11,6 +10,7 @@ import sys
 
 # project libraries
 import average
+import nearest
 import colormodel as cm
 import saturation as satmod
 
@@ -22,18 +22,22 @@ def partition_image(image, rows=6, cols=6):
     """
 
     # Width and height of each individual image (as a float)
-    width = image.width / cols
-    height = image.height / rows
-    images = []
-
-    # Partition image into 36 equal images
+    width, height = image.size
+    
+    width /= cols
+    height /= rows
+    
+    images = []        
+    
     for row in range(rows):
         for col in range(cols):
             left = int(round(width * col))
-            right = int(round(width * (col + 1)))
             top = int(round(height * row))
+            right = int(round(width * (col + 1)))
             bot = int(round(height * (row + 1)))
-            images.append(image[left:right, top:bot])
+            img = image.crop((left, top, right, bot))
+            img.load()
+            images.append(img)
 
     return images
 
@@ -54,14 +58,15 @@ def delegator_average(images, color_model):
 
 def delegator_saturate(images, increase):
     """Take a string "increase" or "decrease", and increase/decrease the saturation of the first row of the image by 10%, while preserving the energy."""
-        satmod.sat_top(images, increase)
+    satmod.sat_top(images, increase)
 
     pass
 
 def delegator_nearest(images, cell, color_model):
     """Take a string cell and a string color model, and locate the cell in the grid with the most similar average color."""
-    near_Image = nearest.compare_average_color(images, cell, colorModel)
-    display (near_Image)
+    near_image = nearest.compare_average_color(images, int(cell), color_model)
+    print(images.index(near_image))
+    # display (near_Image)
 
 def delegator_reduce(images, cell, n):
     """Take a string cell and a string n, and create 7 versions of the image, where the number of colors has been reduced to n."""
@@ -113,10 +118,12 @@ def main(args):
         
     # Verify that the image is good
     while True:
+
         try:
-            image = Image(filename=filepath)
+            image = PIL.open(filepath)
         except Exception:
             print('Invalid image or path "{filepath}"'.format(filepath=filepath))
+            
             filepath = raw_input('Enter the path to an image file: ')
         else:
             # Image is good.
@@ -148,7 +155,11 @@ def main(args):
         # At this point, cmd is a valid command.
 
         # Execute one of the delegator functions with the given arguments.
+        #try:
         CMD_DICT[cmd](images, *args)
+        #except TypeError:
+            #print('Invalid number of arguments for command "{cmd}"'.format(cmd=cmd))
+            #continue
 
 if __name__ == '__main__':
     main(sys.argv[1:]) # skip first argument ("main.py")

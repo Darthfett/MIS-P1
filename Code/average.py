@@ -19,12 +19,13 @@ def average_RGB(img):
     """
     
     # Sum all the Reds, Greens, and Blues
-    pixels = ((px.red, px.green, px.blue) for row in img for px in row)
+    pixels = tuple(img.getdata())
     total = tuple(sum(colors) for colors in zip(*pixels))
 
     # Find average RGB
-    num_pixels = img.width * img.height
-    avg = tuple((component / num_pixels) / (2**16 - 1) for component in total)
+    width, height = img.size
+    num_pixels = width * height
+    avg = tuple((component / num_pixels) / (255) for component in total)
 
     return avg
 #
