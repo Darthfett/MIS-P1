@@ -11,9 +11,11 @@ edit rest of image to maintain 'energy'
 return the image
 """
 
+import colormodel as cm
+
 def sat_top(images, command):
-    cols = 6;
-    pix_size = len(images[1])
+    cols = 6
+    pix_count_x = len(images[1].getdata())
 
     sat_images = images
     sat_amt = 1.10
@@ -31,6 +33,7 @@ def sat_top(images, command):
     # end loop
     """
     for col in range(cols):
+<<<<<<< HEAD
         pixels = sat_images[col]
         for pix in range(pix_size):
             pixel = pixels[pix]
@@ -48,18 +51,36 @@ def sat_top(images, command):
             
             #update pixel in list of pixels
             pixels[pix] = pixel
+=======
+        pixels = sat_images[col].getdata()
+        for p_index in range(pix_count):
+            for p_index in range(pix_count):
+                pixel = pixels[p_index]
+                #convert RGB -> HSL
+                pix_hue, pix_sat, pix_lum = cm.RGB_to_HSL(pixel[0], pixel[1], pixel[2])
+                
+                #alter saturation
+                pix_sat_alt = pix_sat * sat_amt
+
+                #to compensate for altered saturation, change luminance
+                pix_lum_alt = alter_luminance(pix_hue, pix_sat, pix_lum, pix_sat_alt)
+
+                #convert (now altered) HSL -> RGB
+                #update pixel in list of pixels
+                pixels[p_index] = HSL_to_RGB(pix_hue, pix_sat_alt, pix_lum_alt)
+>>>>>>> in progress
 
         #update pixel list to altered pixels list
-        sat_images[col] = pixels;   
+        sat_images[col] = pixels
 
     return sat_images
 
 #returns a new luminance value that will keep energy value of a pixel with altered saturation
 def alter_luminance(h,s,l, s_new):
     #solve for energy of original HSL values (euclidean distance)
-    e = sqrt(h*h + s*s + l*l)
+    e = (h*h + s*s + l*l) ** .5
 
     #solve for new luminance value, using the new saturation (solving for Y, basically)
-    l_new = sqrt(e*e - h*h - s_new*s_new)   
+    l_new = (e*e - h*h - s_new*s_new) ** .5
 
     return (l_new)
