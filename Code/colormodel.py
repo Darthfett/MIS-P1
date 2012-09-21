@@ -57,8 +57,8 @@ def RGB_to_HSL(r, g, b):
     chroma = max_ - min_
 
     if chroma == 0:
-        H = None
-    else:
+        H = 0 # Hue is undefined
+    else: 
         if max_ == r:
             H = ((g - b) / chroma) % 6
         elif max_ == g:
