@@ -56,7 +56,7 @@ def sat_top(images, command):
             #convert (now altered) HSL -> RGB
             #update pixel in pixel_block
             pixel_block.putpixel( (p_index // width, p_index % width), HSL_to_RGB(pix_hue, pix_sat_alt, pix_lum_alt) )
-        sat_images[block].save('%d_after.jpg' % (block) )
+        ##sat_images[block].save('%d_after.jpg' % (block) )
         #update pixel list to altered pixel_block list
         sat_images[block] = pixel_block
     
