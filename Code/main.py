@@ -81,7 +81,7 @@ def delegator_nearest(images, cell, color_model):
     # display (near_Image)
 
 def delegator_reduce(images, cell, n):
-    img = images[int(n)]
+    img = images[int(cell)]
     reduce.reduce_instances(img,n)
     """Take a string cell and a string n, and create 7 versions of the image, where the number of colors has been reduced to n."""
     pass
