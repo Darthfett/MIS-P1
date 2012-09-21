@@ -1,3 +1,5 @@
+from __future__ import division
+
 def RGB_to_XYZ(r, g, b):
     """Get a tuple of the X, Y, Z component of the color."""
 
