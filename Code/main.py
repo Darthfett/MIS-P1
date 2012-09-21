@@ -83,7 +83,9 @@ def delegator_nearest(images, cell, color_model):
 def delegator_reduce(images, cell, n):
     img = images[int(cell)]
     new_img = reduce.reduce_instances(img,int(n))
-    new_img.save('../Outputs/reduce.png')
+    ilist = images[:int(cell)] + [new_img] + images[int(cell)+1:]
+    final_image = highlight.splice_image(ilist)
+    final_image.save('../Outputs/reduce.png')
     """Take a string cell and a string n, and create 7 versions of the image, where the number of colors has been reduced to n."""
     pass
 
