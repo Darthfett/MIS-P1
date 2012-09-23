@@ -8,6 +8,8 @@ from operator import itemgetter, attrgetter
 import os
 import sys
 from PIL import Image
+import colormodel as cm
+import itertools as it
 
 def largest_box (boxes):
     big_b=boxes[0]
@@ -77,7 +79,7 @@ def median_cut(boxes,n):
         boxes.insert(i,box2)
         boxes.insert(i,box1)
         #print boxes#
-         #define split
+        #define split
         #print "else"#
         #print boxes#
     return boxes
@@ -86,24 +88,75 @@ def f7(seq):
     seen_add = seen.add
     return [ x for x in seq if x not in seen and not seen_add(x)]
 
-def reduce_instances(img,n):
+def pixel_info_to_int(p_list):
     '''
-    take an image and a number, reduce the color
+    given a pixel list, return the list with all values converted to int
+    '''
+    
+    for pixel in p_list:
+        i = p_list.index(pixel)
+        l_pixel = list(pixel)
+        for val in l_pixel:
+            int_val = int(val)
+            l_pixel[l_pixel.index(val)]=int_val
+        p_list[i]=tuple(l_pixel)
+    return p_list
+    
+
+def reduce_instances(img,n,):
+    '''
+    take an image and a number, reduce the color. Return a 7-list of image objects, one for each color space
     '''
     im = img.copy()
     pixList = list(im.getdata())
     unique_list = list(set(pixList))
+    reduced_list = [] # A list of 3-tuple pixel lists in RGB that have been reduced.# Actually, a list of Image objects?
+    converted_pixList = list(it.starmap(cm.converter_for_colormodel['XYZ'],pixList))
+    #converted_pixList = pixel_info_to_int(converted_pixList)
+   # print converted_pixList#
+    #pix1 = converted_pixList[1]#
+    #val1 = pix1[1]#
+    #print val1#
+    #val1 = int(val1)#
+    #print val1#
+    '''
+    for pixel in converted_pixList:
+        i = converted_pixList.index(pixel)
+        l_pixel = list(pixel)
+        for val in l_pixel:
+            int_val = int(val)
+            l_pixel[l_pixel.index(val)]=int_val
+        converted_pixList[i]=l_pixel
+    print converted_pixList
+    '''
+        
+    #converted_pixList = pixel_info_to_int(converted_pixList)#
+    #print pixel_info_to_int(converted_pixList)#
+    #print "pixList:"#
+    #print pixList#
     #print "pixListLength:"#
     #print len(pixList)#
     #print "uniqueListLength:"#
     #print len(unique_list)#
-    instance_box = []
-    instance_box.append(unique_list)
-    box_list = median_cut(instance_box,n)
-    for p in pixList:
-        for box in box_list:
-            if p in box:
-                pixList[pixList.index(p)] = box[0]
+    
+    for model in cm.converter_for_colormodel:
+        converted_pixList = list(it.starmap(cm.converter_for_colormodel[model],pixList))
+        #converted_pixList = pixel_info_to_int(converted_pixList)
+        converted_unique = list(it.starmap(cm.converter_for_colormodel[model], unique_list))
+        #converted_unique = pixel_info_to_int(converted_unique)
+        instance_box = []
+        instance_box.append(converted_unique)
+        box_list = median_cut(instance_box,n)
+        for p in converted_pixList:
+            for box in box_list:
+                if p in box:
+                    converted_pixList[converted_pixList.index(p)] = box[0]
+        converted_pixList = list(it.starmap(cm.convert_back_for_colormodel[model],converted_pixList))
+        converted_pixList = pixel_info_to_int(converted_pixList)
+        #print converted_pixList#
+        im.putdata(converted_pixList)# want to put converted_pixList I think
+        #print im.getdata()#
+        reduced_list.append(im)
     #print "new pixListLength:"#
     #print len(pixList)#
     #print "new pixList vals:"#
@@ -111,12 +164,16 @@ def reduce_instances(img,n):
     #print "box_list:"#
     #print len(box_list)#
     #Image.frombuffer('RGB', im.size, pixList)
-    im.putdata(pixList)
-    return im
+    #im.putdata(pixList)
+    #return im
+    return reduced_list
+    
 
 ## Testing:
-#new_im = Image.open('blue_gradient.jpg')
-#newer_im = reduce_instances (new_im,2)
+#start_im = Image.open('blue_gradient.jpg')#
+#new_list = reduce_instances(start_im,2)
+#new_im_RGB = new_list[0]
+#new_im_RGB.save('testRGBreduced.jpg')
 #newer_im.save('testIm.jpg') 
 #new_list = list(new_im.getdata())
 #print "new_list:"

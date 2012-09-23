@@ -82,10 +82,31 @@ def delegator_nearest(images, cell, color_model):
 
 def delegator_reduce(images, cell, n):
     img = images[int(cell)]
-    new_img = reduce.reduce_instances(img,int(n))
-    ilist = images[:int(cell)] + [new_img] + images[int(cell)+1:]
-    final_image = highlight.splice_image(ilist)
-    final_image.save('../Outputs/reduce.png')
+    reduced_list = reduce.reduce_instances(img,int(n))
+    RGB_reduced_spliced = highlight.splice_image(images[:int(cell)] + [reduced_list[0]] + images[int(cell)+1:])
+    RGB_reduced_spliced.save('../Outputs/reduce_RGB.png')
+
+
+    XYZ_reduced_spliced = highlight.splice_image(images[:int(cell)] + [reduced_list[1]] + images[int(cell)+1:])
+    XYZ_reduced_spliced.save('../Outputs/reduce_XYZ.png')
+
+    CMY_reduced_spliced = highlight.splice_image(images[:int(cell)] + [reduced_list[2]] + images[int(cell)+1:])
+    CMY_reduced_spliced.save('../Outputs/reduce_CMY.png')
+
+    YUV_reduced_spliced = highlight.splice_image(images[:int(cell)] + [reduced_list[3]] + images[int(cell)+1:])
+    YUV_reduced_spliced.save('../Outputs/reduce_YUV.png')
+
+    YIQ_reduced_spliced = highlight.splice_image(images[:int(cell)] + [reduced_list[4]] + images[int(cell)+1:])
+    YIQ_reduced_spliced.save('../Outputs/reduce_YIQ.png')
+
+    YCbCr_reduced_spliced = highlight.splice_image(images[:int(cell)] + [reduced_list[5]] + images[int(cell)+1:])
+    YCbCr_reduced_spliced.save('../Outputs/reduce_YCbCr.png')
+
+    Lab_reduced_spliced = highlight.splice_image(images[:int(cell)] + [reduced_list[6]] + images[int(cell)+1:])
+    Lab_reduced_spliced.save('../Outputs/reduce_Lab.png')
+
+    HSL_reduced_spliced = highlight.splice_image(images[:int(cell)] + [reduced_list[7]] + images[int(cell)+1:])
+    HSL_reduced_spliced.save('../Outputs/reduce_HSL.png')
     """Take a string cell and a string n, and create 7 versions of the image, where the number of colors has been reduced to n."""
     pass
 

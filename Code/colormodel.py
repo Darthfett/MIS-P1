@@ -106,6 +106,92 @@ def HSL_to_RGB(hue, sat, lum): #math found here is sourced from equations found 
 
     return (r1 + li, g1 + li, b1 + li)
 
+def XYZ_to_RGB (X,Y,Z):
+    '''
+    given X,Y,Z values for a pixel, return corresponding R,G,B values
+    Equations adapted from easyrgb.com
+    '''
+    var_X = X/100
+    var_Y = Y/100
+    var_Z = Z/100
+    var_R = var_X*3.2406 + var_Y *-1.5372 + var_Z*-.4986
+    var_G = var_X * -0.9689 + var_Y *  1.8758 + var_Z *  0.0415
+    var_B = var_X *  0.0557 + var_Y * -0.2040 + var_Z *  1.0570
+    if var_R > 0.0031308: 
+        var_R = 1.055 * ( var_R ** ( 1 / 2.4 ) ) - 0.055
+    else:
+        var_R = 12.92 * var_R
+    if var_G > 0.0031308:
+        var_G = 1.055 * ( var_G ** ( 1 / 2.4 ) ) - 0.055
+    else:
+        var_G = 12.92 * var_G
+    if var_B > 0.0031308:
+        var_B = 1.055 * ( var_B ** ( 1 / 2.4 ) ) - 0.055
+    else:
+        var_B = 12.92*var_B
+    R = var_R *255
+    G = var_G *255
+    B = var_B *255
+    return (R,G,B)
+
+def LAB_to_XYZ(L,A,B):
+    '''
+    convert pixels from L*a*b to XYZ
+    code adapted from easyrgb.com
+    '''
+    var_Y = ( L + 16 )/116
+    var_X = A/500 + var_Y
+    var_Z = var_Y - B/200
+    
+    if var_Y**3 > 0.008856:
+        var_Y = var_Y**3
+    else:
+        var_Y = ( var_Y - 16 / 116 ) / 7.787
+    if var_X**3 > 0.008856:
+        var_X = var_X**3
+    else:
+        var_X = ( var_X - 16 / 116 ) / 7.787
+    if var_Z**3 > 0.008856:
+        var_Z = var_Z**3
+    else:
+        var_Z = ( var_Z - 16 / 116 ) / 7.787
+    ref_X = 95.047
+    ref_Y = 100.000
+    ref_Z = 108.883
+    X = ref_X * var_X
+    Y = ref_Y * var_Y
+    Z = ref_Z * var_Z
+    return (X,Y,Z)
+
+def LAB_to_RGB(L,A,B):
+    X,Y,Z = LAB_to_XYZ(L,A,B)
+    R,G,B = XYZ_to_RGB(X,Y,Z)
+    return (R,G,B)
+
+def YIQ_to_RGB(Y,I,Q):
+    R = 1*Y + .9563*I + .6210*Q
+    G = 1*Y + -.2721*I + -.6474*Q
+    B = 1*Y + -1.1070*I + 1.7064*Q
+    return (R,G,B)
+
+def CMY_to_RGB(C,M,Y):
+    R = 1-C
+    G = 1-M
+    B = 1-Y
+    return (R,G,B)
+
+def YUV_to_RGB(Y,U,V):
+    R = 1*Y + 0*U + 1.14*V
+    G = 1*Y + -.394*U + -.581*U
+    B = 1*Y + 2.028*U + 0*V
+    return (R,G,B)
+
+def YCbCr_to_RGB(Y,Cb,Cr):
+    R = Y + 1.402*(Cr-128)
+    G = Y - .034414*(Cb-128) - .71414*(Cr-128)
+    B = Y + 1.772*(Cb-128)
+    return (R,G,B)
+
 converter_for_colormodel = {
     'RGB': lambda r, g, b: (r, g, b),
     'XYZ': RGB_to_XYZ,
@@ -114,6 +200,17 @@ converter_for_colormodel = {
     'YIQ': RGB_to_YIQ,
     'YCbCr': RGB_to_YCbCr,
     'Lab': RGB_to_LAB,
+    'HSL': RGB_to_HSL,
+}
+
+convert_back_for_colormodel = {
+    'RGB': lambda r, g, b: (r, g, b),
+    'XYZ': XYZ_to_RGB,
+    'CMY': CMY_to_RGB,
+    'YUV': YUV_to_RGB,
+    'YIQ': YIQ_to_RGB,
+    'YCbCr': YCbCr_to_RGB,
+    'Lab': LAB_to_RGB,
     'HSL': RGB_to_HSL,
 }
 
